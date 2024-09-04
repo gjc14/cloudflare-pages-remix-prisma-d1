@@ -2,10 +2,13 @@
 
 ## How to use
 
+### Setup D1
+
 1. Clone the repo
 
 ```sh
 git clone https://github.com/GJC14/cloudflare-remix-prisma-d1.git
+cd cloudflare-remix-prisma-d1
 ```
 
 2. Install dependencies
@@ -26,26 +29,41 @@ database_name = "<YOUR_DATABASE_NAME>"
 database_id = "<YOUR_DATABASE_ID>"
 ```
 
-## Cloudflare D1 Migration
+4. Generate D1 Env
+
+You'll see worker-configuration.d.ts in root level defining Env for use with @remix-run/cloudflare
+
+```sh
+npm run typegen
+```
+
+### Cloudflare D1 Migration with Prisma
 
 1. D1 Migrate
 
+In this case, binding is set to "DB" and I made a schema of User and Post.
+This will make an empty .sql file in /migrations.
+
 ```sh
-npx wrangler d1 migrations create $DB_NAME $MESSAGE
+# npx wrangler d1 migrations create $DB_NAME $MESSAGE
+npx wrangler d1 migrations create DB create_user_and_post_table
 ```
 
-2. Generate SQL statement
+2. Generate SQL statement in the file created
+
+This will transform schema.prisma into sql schema in the migration file you just created.
 
 **Before any migrations**
 
 ```sh
-npx prisma migrate diff --from-empty --to-schema-datamodel ./prisma/schema.prisma --script --output migrations/$MIGRATION_NAME.sql
+# npx prisma migrate diff --from-empty --to-schema-datamodel ./prisma/schema.prisma --script --output migrations/$FILE_JUST_CREATED.sql
+npx prisma migrate diff --from-empty --to-schema-datamodel ./prisma/schema.prisma --script --output migrations/0001_create_user_and_post_table.sql
 ```
 
 **After first migration**
 
 ```sh
-npx prisma migrate diff --from-local-d1 --to-schema-datamodel ./prisma/schema.prisma --script --output migrations/$MIGRATION_NAME.sql
+npx prisma migrate diff --from-local-d1 --to-schema-datamodel ./prisma/schema.prisma --script --output migrations/$FILE_JUST_CREATED.sql
 ```
 
 3. Send SQL statement to D1
@@ -57,7 +75,9 @@ npx wrangler d1 migrations apply $DB_NAME --local
 npx wrangler d1 migrations apply $DB_NAME --remote
 ```
 
-4. Generate Prisma Client to use @prisma/client:
+4. Generate Prisma Client to use @prisma/client
+
+Now with the Database set, you could generate your Priama Client!
 
 ```sh
 npx prisma generate
