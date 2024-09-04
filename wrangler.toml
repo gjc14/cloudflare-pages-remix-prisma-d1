@@ -1,0 +1,4 @@
+[[ d1_databases ]]
+binding = "DB"
+database_name = "<YOUR_DATABASE_NAME>"
+database_id = "<YOUR_DATABASE_ID>"

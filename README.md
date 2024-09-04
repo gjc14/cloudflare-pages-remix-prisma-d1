@@ -1,3 +1,12 @@
+# Remix + Prisma + Cloudflare D1
+
+Starts from official Remix Cloudflare template `npx create-remix@latest --template remix-run/remix/templates/cloudflare`.
+
+1. Added wrangler.toml
+2. `npm run typegen` and removes the `interface ENV {}` in load-context.ts
+
+---
+
 # Welcome to Remix + Cloudflare!
 
 - 📖 [Remix docs](https://remix.run/docs)
