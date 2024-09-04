@@ -20,7 +20,7 @@ export const loader = async ({ context }: LoaderFunctionArgs) => {
   const env = context.cloudflare.env;
 
   try {
-    let { results } = await env.DB.prepare("SELECT * FROM users LIMIT 5").all(); // This will throw Error: D1_ERROR: no such table: users
+    let { results } = await env.DB.prepare("SELECT * FROM user LIMIT 5").all();
 
     return json({ results });
   } catch (error) {
@@ -31,6 +31,7 @@ export const loader = async ({ context }: LoaderFunctionArgs) => {
 
 export default function Index() {
   const { results } = useLoaderData<typeof loader>();
+  console.log(results);
 
   return (
     <main>
