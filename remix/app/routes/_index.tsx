@@ -20,9 +20,11 @@ export const loader = async ({ context }: LoaderFunctionArgs) => {
   const env = context.cloudflare.env;
 
   try {
-    let { results } = await env.DB.prepare("SELECT * FROM user LIMIT 5").all();
+    const response = await env.DB.fetch("/");
+    const result = await response.text();
+    console.log("Hello from prisma-worker", result);
 
-    return json({ results });
+    return json({ result });
   } catch (error) {
     console.error(error);
     throw new Error("Failed to fetch data");
@@ -30,8 +32,8 @@ export const loader = async ({ context }: LoaderFunctionArgs) => {
 };
 
 export default function Index() {
-  const { results } = useLoaderData<typeof loader>();
-  console.log(results);
+  const { result } = useLoaderData<typeof loader>();
+  console.log(result);
 
   return (
     <main className="m-8 space-y-5">
@@ -46,7 +48,7 @@ export default function Index() {
       </p>
 
       <p className="px-3 py-2 bg-gray-200 rounded-[8px]">
-        {JSON.stringify(results)}
+        {JSON.stringify(result)}
       </p>
 
       <div>

@@ -1,4 +1,10 @@
-[[ d1_databases ]]
+# This is use for formal fetch
+[[services]]
 binding = "DB"
-database_name = "<YOUR_DATABASE_NAME>"
-database_id = "<YOUR_DATABASE_ID>"
+service = "prisma-db"
+
+# This is for RPC
+[[services]]
+binding = "USER_SERVICE"    # Name used in remix
+service = "prisma-db"   # Should match the name in prisma-worker
+entrypoint = "UserService"  # This is what exported in index.js (main = "src/index.ts" configured in wrangler.toml prisma-worker)

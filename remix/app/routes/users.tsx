@@ -1,11 +1,10 @@
 import { json, LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { Link, useLoaderData } from "@remix-run/react";
-import { getUsers } from "~/db/user.server";
 
 export const loader = async ({ context }: LoaderFunctionArgs) => {
   const env = context.cloudflare.env;
 
-  const users = await getUsers(env.DB);
+  const users = await env.USER_SERVICE.getUsers();
   return json({ users });
 };
 
