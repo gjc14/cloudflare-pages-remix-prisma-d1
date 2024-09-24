@@ -50,7 +50,7 @@ database_id = "<YOUR_DATABASE_ID>"
 # /remix/wrangler.toml
 [[service]]
 binding = "DB"
-service = "prisma-worker"
+service = "prisma-worker-test"
 
 [[service]]
 binding = "USER_SERVICE"
@@ -88,7 +88,7 @@ interface Env {
 }
 ```
 
-### Cloudflare D1 Migration with Prisma
+### 6. Cloudflare D1 Migration with Prisma
 
 1. D1 Migrate
 
@@ -123,7 +123,6 @@ npx prisma migrate diff --from-local-d1 --to-schema-datamodel ./prisma/schema.pr
 
 ```sh
 npx wrangler d1 migrations apply $DB_NAME --local
-npx wrangler d1 migrations apply $DB_NAME --remote
 ```
 
 4. Generate Prisma Client to use `@prisma/client`
@@ -149,12 +148,45 @@ export const loader: LoaderFunction = async ({ context, params }) => {
 
 6. Finally open your services
 
-```
+```sh
 # /prisma-worker
 npm run start
 
 # /remix
 npm run dev
+```
+
+7. Deploy prisma-worker
+
+```sh
+# /prisma-worker
+npm run deploy
+```
+
+8. Create a D1 and apply schema
+
+Create D1 either by CLI or dashboard, name is the same as defined in `/prisma-worker/wrangler.toml`.
+
+```sh
+% npx wrangler d1 create prisma-worker-test
+
+ ⛅️ wrangler 3.75.0
+-------------------
+
+✅ Successfully created DB 'prisma-worker-test' in region ENAM
+Created your new D1 database.
+
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "prisma-worker-test"
+database_id = "857dbfc4-d75c-4b32-9eea-7d5cccb9a9a8"
+```
+
+Replace the new id in `/prisma-worker/wrangler.toml`. Then run in `prisma-worker`:
+
+```sh
+# npx wrangler d1 migrations apply $DB_NAME --remote
+npx wrangler d1 migrations apply DB --remote
 ```
 
 ## Reference

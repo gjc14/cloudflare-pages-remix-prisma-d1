@@ -56,6 +56,12 @@ export default function Index() {
           {">"} Checkout Users Query to Prisma-Worker via RPC
         </Link>
       </div>
+
+      <div>
+        <Link to="rpc" className="font-semibold hover:underline">
+          {">"} Checkout RPC response from Prisma-Worker
+        </Link>
+      </div>
     </main>
   );
 }

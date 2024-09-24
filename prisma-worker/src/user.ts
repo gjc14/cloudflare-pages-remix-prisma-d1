@@ -4,10 +4,9 @@ import { UserRole, UserStatus } from './db/type';
 
 export class UserService extends WorkerEntrypoint<Env> {
 	async getUsers() {
-		// const db = this.env.DB;
-		// const users = await prismaGetUsers(db);
-		// return users;
-		return 'Hello from UserService.getUsers()';
+		const db = this.env.DB;
+		const users = await prismaGetUsers(db);
+		return users;
 	}
 
 	async createUser(email: string, role: UserRole, status: UserStatus) {
@@ -19,5 +18,9 @@ export class UserService extends WorkerEntrypoint<Env> {
 		// });
 		// return user;
 		return 'Hello from UserService.createUser()';
+	}
+
+	async hi() {
+		return 'Hello from UserService.hi()';
 	}
 }

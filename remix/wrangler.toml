@@ -1,10 +1,10 @@
 # This is use for formal fetch
 [[services]]
 binding = "DB"
-service = "prisma-worker"
+service = "prisma-worker-test"
 
 # This is for RPC
 [[services]]
 binding = "USER_SERVICE"    # Name used in remix
-service = "prisma-worker"   # Should match the name in prisma-worker
+service = "prisma-worker-test"   # Should match the name in prisma-worker
 entrypoint = "UserService"  # This is what exported in index.js (main = "src/index.ts" configured in wrangler.toml prisma-worker)
