@@ -24,27 +24,48 @@ cd cloudflare-remix-prisma-d1
 2. Install dependencies
 
 ```sh
+# In both remix and prisma-worker
 npm install
 ```
 
-3. Configurate `wrangler.toml`
+3. Configurate `/prisma-worker/wrangler.toml` and `/remix/wrangler.toml`
 
-binding for name in the application
+binding services
 YOUR_DATABASE_NAME and YOUR_DATABASE_ID, please refer to **Dashboard > Workers & Pages > D1**
+Entrypoint in `/remix/wrangler.toml` should match the export `WorkerEntrypoint` in `/prisma-worker/src/index`
 
 ```
+# /prisma-worker/wrangler.toml
 [[ d1_databases ]]
 binding = "DB"
 database_name = "<YOUR_DATABASE_NAME>"
 database_id = "<YOUR_DATABASE_ID>"
 ```
 
-4. Generate D1 Env
+4. Generate D1 Env in Remix
 
 You'll see `worker-configuration.d.ts` in root level defining Env for use with `@remix-run/cloudflare`
 
 ```sh
 npm run typegen
+```
+
+5. Configure `Interface Env` to use RPC
+   Change the result of `npm run typegen` in `worker-configuration.d.ts`:
+
+```ts
+// /remix/worker-configuration.d.ts
+// From
+interface Env {
+  DB: Fetcher;
+  USER_SERVICE: Fetcher;
+}
+
+// To
+interface Env {
+  DB: Fetcher;
+  USER_SERVICE: Service<UserService>;
+}
 ```
 
 ### Cloudflare D1 Migration with Prisma
@@ -95,7 +116,7 @@ npx prisma generate
 
 5. Use prisma
 
-```typescript
+```ts
 export const loader: LoaderFunction = async ({ context, params }) => {
   let env = context.cloudflare.env;
   const adapter = new PrismaD1(env["YOUR_DB_NAME"]);
@@ -122,34 +143,20 @@ Starts from official Remix Cloudflare template:
 npx create-remix@latest --template remix-run/remix/templates/cloudflare
 ```
 
-### remix folder
+### remix
 
 1. Added wrangler.toml
 2. `npm run typegen`, you will see the change in worker-configuration.d.ts
 3. Change the definition of `interface Env`
-   Change the result of `npm run typegen` in `worker-configuration.d.ts`, it will be:
-
-```ts
-// From
-interface Env {
-  DB: Fetcher;
-  USER_SERVICE: Fetcher;
-}
-
-// To
-interface Env {
-  DB: Fetcher;
-  USER_SERVICE: Service<UserService>;
-}
-```
-
 4. Removes the `interface ENV {}` in load-context.ts by template
 
-**You're good to go if you'd like to use raw D1 query.**
+### prisma-worker
 
-4. `npm install prisma --save-dev` `npx prisma init`
-5. `npm install @prisma/adapter-d1`
-6. `npm create cloudflare@latest` with Hello World example/Hello World Worker/TypeScript
+1. `npm create cloudflare@latest` with Hello World example/Hello World Worker/TypeScript
+2. `npm install prisma --save-dev @prisma/adapter-d1` `npm install @prisma/adapter-d1`
+3. `npx prisma init`
+4. `npm run cf-typegen`
+5. Migration
 
 ---
 

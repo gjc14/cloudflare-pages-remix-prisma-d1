@@ -20,9 +20,12 @@ export const loader = async ({ context }: LoaderFunctionArgs) => {
   const env = context.cloudflare.env;
 
   try {
-    const response = await env.DB.fetch("/");
-    const result = await response.text();
-    console.log("Hello from prisma-worker", result);
+    // const response = await env.DB.fetch("http://localhost:8787");
+    // const result = await response.text();
+    // console.log("Hello from prisma-worker", result);
+
+    const users = await env.USER_SERVICE.getUsers();
+    const result = users;
 
     return json({ result });
   } catch (error) {
@@ -33,7 +36,7 @@ export const loader = async ({ context }: LoaderFunctionArgs) => {
 
 export default function Index() {
   const { result } = useLoaderData<typeof loader>();
-  console.log(result);
+  console.log("Hello frontend", result);
 
   return (
     <main className="m-8 space-y-5">
