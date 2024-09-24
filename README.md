@@ -17,8 +17,8 @@ If you just want have a glance in how Remix Prisma and Cloudflare interact and d
 1. ⭐️ and clone the repo
 
 ```sh
-git clone https://github.com/GJC14/cloudflare-remix-prisma-d1.git
-cd cloudflare-remix-prisma-d1
+git clone https://github.com/GJC14/cloudflare-pages-remix-prisma-d1.git
+cd cloudflare-pages-remix-prisma-d1
 ```
 
 2. Install dependencies
@@ -42,12 +42,28 @@ database_name = "<YOUR_DATABASE_NAME>"
 database_id = "<YOUR_DATABASE_ID>"
 ```
 
-4. Generate D1 Env in Remix
+```
+# /remix/wrangler.toml
+[[service]]
+binding = "DB"
+service = "prisma-worker"
+
+[[service]]
+binding = "USER_SERVICE"
+service = "prisma-worker"
+entrypoint = "UserService"
+```
+
+4. Generate Env in remix and prisma-worker
 
 You'll see `worker-configuration.d.ts` in root level defining Env for use with `@remix-run/cloudflare`
 
 ```sh
+# Remix
 npm run typegen
+
+# Worker (prisma-worker)
+npm run cf-typegen
 ```
 
 5. Configure `Interface Env` to use RPC
@@ -134,6 +150,13 @@ export const loader: LoaderFunction = async ({ context, params }) => {
 - [Query D1 using Prisma ORM](https://developers.cloudflare.com/d1/tutorials/d1-and-prisma-orm)
 - [Prisma Cloudflare D1](https://www.prisma.io/docs/orm/overview/databases/cloudflare-d1)
 - [Prisma Cloudflare D1 Deploy](https://www.prisma.io/docs/orm/prisma-client/deployment/edge/deploy-to-cloudflare#cloudflare-d1)
+
+### RPC
+
+- [RPC Added to CF Workers](https://blog.cloudflare.com/javascript-native-rpc/)
+- [Repo: cloudflare/js-rpc-and-entrypoints-demo](https://github.com/cloudflare/js-rpc-and-entrypoints-demo/tree/main/public-admin-api-interfaces)
+
+---
 
 ## How I made this
 
