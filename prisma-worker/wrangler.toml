@@ -39,7 +39,7 @@ compatibility_flags = ["nodejs_compat"]
 [[d1_databases]]
 binding = "DB"
 database_name = "prisma-worker-test"
-database_id = "857dbfc4-d75c-4b32-9eea-7d5cccb9a9a8"    # Change to your D1 id if deploy
+database_id = "732f77c8-054c-4da0-a810-01544c6f1066"    # Change to your D1 id if deploy
 
 # Bind a dispatch namespace. Use Workers for Platforms to deploy serverless functions programmatically on behalf of your customers.
 # Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#dispatch-namespace-bindings-workers-for-platforms
