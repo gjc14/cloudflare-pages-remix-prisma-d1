@@ -12,6 +12,10 @@ If you just want have a glance in how Remix Prisma and Cloudflare interact and d
 
 ## How to use
 
+**You'll have to deploy Remix on Pages by specifying /remix as root**
+
+**Prisma Worker should deploy separately to a worker**
+
 ### Setup D1
 
 1. ⭐️ and clone the repo
@@ -141,6 +145,16 @@ export const loader: LoaderFunction = async ({ context, params }) => {
   let { results } = await prisma.user.findMany();
   return json(results);
 };
+```
+
+6. Finally open your services
+
+```
+# /prisma-worker
+npm run start
+
+# /remix
+npm run dev
 ```
 
 ## Reference

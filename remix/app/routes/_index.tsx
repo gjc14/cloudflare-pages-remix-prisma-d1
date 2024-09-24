@@ -20,12 +20,9 @@ export const loader = async ({ context }: LoaderFunctionArgs) => {
   const env = context.cloudflare.env;
 
   try {
-    // const response = await env.DB.fetch("http://localhost:8787");
-    // const result = await response.text();
-    // console.log("Hello from prisma-worker", result);
-
-    const users = await env.USER_SERVICE.getUsers();
-    const result = users;
+    const response = await env.DB.fetch("http://localhost:8787");
+    const result = await response.text();
+    console.log("Hello from prisma-worker", result);
 
     return json({ result });
   } catch (error) {
@@ -45,7 +42,7 @@ export default function Index() {
       <p>
         Result of{" "}
         <code className="text-sm bg-amber-300 px-1">
-          await env.DB.prepare('SELECT * FROM user LIMIT 5').all()
+          await env.DB.fetch("http://localhost:8787")
         </code>{" "}
         in loader
       </p>
@@ -56,7 +53,7 @@ export default function Index() {
 
       <div>
         <Link to="users" className="font-semibold hover:underline">
-          {">"} Checkout Users Query with Prisma
+          {">"} Checkout Users Query to Prisma-Worker via RPC
         </Link>
       </div>
     </main>

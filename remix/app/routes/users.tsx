@@ -17,7 +17,7 @@ export default function User() {
       <p>
         Result of{" "}
         <code className="text-sm bg-amber-300 px-1">
-          await prisma.user.findMany();
+          await context.cloudflare.env.USER_SERVICE.getUsers()
         </code>{" "}
         in loader:{" "}
       </p>
