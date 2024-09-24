@@ -122,14 +122,34 @@ Starts from official Remix Cloudflare template:
 npx create-remix@latest --template remix-run/remix/templates/cloudflare
 ```
 
+### remix folder
+
 1. Added wrangler.toml
 2. `npm run typegen`, you will see the change in worker-configuration.d.ts
-3. Removes the `interface ENV {}` in load-context.ts by template
+3. Change the definition of `interface Env`
+   Change the result of `npm run typegen` in `worker-configuration.d.ts`, it will be:
+
+```ts
+// From
+interface Env {
+  DB: Fetcher;
+  USER_SERVICE: Fetcher;
+}
+
+// To
+interface Env {
+  DB: Fetcher;
+  USER_SERVICE: Service<UserService>;
+}
+```
+
+4. Removes the `interface ENV {}` in load-context.ts by template
 
 **You're good to go if you'd like to use raw D1 query.**
 
 4. `npm install prisma --save-dev` `npx prisma init`
 5. `npm install @prisma/adapter-d1`
+6. `npm create cloudflare@latest` with Hello World example/Hello World Worker/TypeScript
 
 ---
 
