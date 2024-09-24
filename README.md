@@ -1,10 +1,20 @@
-# Remix + Prisma + Cloudflare D1 (WIP)
+# Remix Page + Prisma Worker -> Cloudflare D1 (via RPC)
+
+## Warning
+
+With the project getting larger, you may encounter `Your Worker exceeded the size limit of 1 MiB.`
+
+Actually when I start using Prisma to call D1, this happened.
+
+So it is inevitable to **Separate your project** and connect them with [RPC](https://blog.cloudflare.com/javascript-native-rpc/)
+
+If you just want have a glance in how Remix Prisma and Cloudflare interact and deploy on one Page, please refer to [single-page](https://github.com/gjc14/cloudflare-pages-remix-prisma-d1/tree/single-page) branch.
 
 ## How to use
 
 ### Setup D1
 
-1. Clone the repo
+1. ⭐️ and clone the repo
 
 ```sh
 git clone https://github.com/GJC14/cloudflare-remix-prisma-d1.git
@@ -17,7 +27,7 @@ cd cloudflare-remix-prisma-d1
 npm install
 ```
 
-3. Configurate wrangler.toml
+3. Configurate `wrangler.toml`
 
 binding for name in the application
 YOUR_DATABASE_NAME and YOUR_DATABASE_ID, please refer to **Dashboard > Workers & Pages > D1**
@@ -31,7 +41,7 @@ database_id = "<YOUR_DATABASE_ID>"
 
 4. Generate D1 Env
 
-You'll see worker-configuration.d.ts in root level defining Env for use with @remix-run/cloudflare
+You'll see `worker-configuration.d.ts` in root level defining Env for use with `@remix-run/cloudflare`
 
 ```sh
 npm run typegen
@@ -51,7 +61,7 @@ npx wrangler d1 migrations create DB create_user_and_post_table
 
 2. Generate SQL statement in the file created
 
-This will transform schema.prisma into sql schema in the migration file you just created.
+This will transform `schema.prisma` into sql schema in the migration file you just created.
 
 **Before any migrations**
 
@@ -68,14 +78,14 @@ npx prisma migrate diff --from-local-d1 --to-schema-datamodel ./prisma/schema.pr
 
 3. Send SQL statement to D1
 
-`--local` will be generated in .wrangler/state.
+`--local` will be generated in `.wrangler/state`.
 
 ```sh
 npx wrangler d1 migrations apply $DB_NAME --local
 npx wrangler d1 migrations apply $DB_NAME --remote
 ```
 
-4. Generate Prisma Client to use @prisma/client
+4. Generate Prisma Client to use `@prisma/client`
 
 Now with the Database set, you could generate your Priama Client!
 
